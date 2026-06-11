@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sports Analytics Academy – 2026 NBA Finals</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1b2e;--bg2:#081423;--card:#0f1e33;--card2:#122040;
+  --border:#1e3a5f;--orange:#f58426;--blue:#006bb6;--blue2:#1a7fd4;
+  --silver:#c4ced4;--green:#2ecc71;--red:#e74c3c;
+  --white:#ffffff;--off:#e8edf2;--muted:#7a9ab8;--cyan:#4dc3f7;
+}
+html,body{background:var(--bg2);font-family:'Barlow',sans-serif;color:var(--white);font-size:14px;line-height:1.4;min-height:100vh}
+img{display:block}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:#060e1a;border-bottom:2px solid var(--orange);padding:10px 12px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fb-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);white-space:nowrap}
+.fb-chips{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.chip{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.chip:hover{border-color:var(--orange);color:var(--orange)}
+.chip.on{background:var(--orange);border-color:var(--orange);color:#fff}
+.chip.all-chip.on{background:var(--blue2);border-color:var(--blue2)}
+.chip.g5.on,.chip.g6.on,.chip.g7.on{background:#2a1a3e;border-color:#7b5ea7;color:#c07ef5}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(180deg,#061220 0%,#0d1b2e 100%);padding:12px 16px 10px;border-bottom:2px solid #1e3a5f}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.menu-icon{font-size:22px;color:var(--muted);cursor:pointer}
+.hdr-title-wrap{text-align:center;flex:1}
+.hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#fff;line-height:1}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);margin-top:2px}
+.hdr-logos{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px}
+.logo-item{display:flex;flex-direction:column;align-items:center;gap:3px}
+.logo-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+/* ── CARDS ── */
+.section{background:var(--card);border:1px solid var(--border);margin:10px;border-radius:8px;padding:14px;position:relative;overflow:hidden}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:12px}
+
+/* ── SERIES STATUS ── */
+.series-status-inner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.series-score-big{font-family:'Barlow Condensed',sans-serif;font-size:clamp(20px,5vw,28px);font-weight:900;text-align:center;line-height:1.1;flex:1}
+.series-meta-row{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
+.series-meta-row b{color:var(--off)}
+
+/* ── GAME RESULTS ── */
+.gr-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(30,58,95,.4)}
+.gr-row:last-child{border-bottom:none}
+.gr-num{color:var(--muted);width:50px;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.gr-score{flex:1;color:var(--off)}
+.gr-w{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;width:14px;text-align:right}
+.gr-w.win{color:var(--green)}.gr-w.loss{color:var(--red)}.gr-w.tbd{color:var(--muted)}
+/* upcoming game highlight */
+.gr-row.upcoming{opacity:.6;font-style:italic}
+.gr-row.active-game{background:rgba(245,132,38,.08);border-radius:4px;padding:5px 6px;margin:0 -6px}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.kpi-icon{font-size:16px;margin-bottom:2px}
+.kpi-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--off)}
+.kpi-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,8vw,38px);font-weight:900;line-height:1;margin:4px 0 6px}
+.kpi-sub{font-size:10px;color:var(--muted);line-height:1.5}
+.c-cyan{color:var(--cyan)}.c-green{color:var(--green)}.c-orange{color:var(--orange)}.c-purple{color:#c97ef7}
+
+/* comparison pill inside KPI */
+.kpi-compare{display:flex;justify-content:center;gap:8px;margin-top:4px;font-size:10px}
+.kc-item{display:flex;align-items:center;gap:3px}
+.kc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.kc-val{color:var(--off);font-weight:600}
+
+/* ── FOUR FACTORS ── */
+.ff-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ff-block{}
+.ff-ct{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
+.bar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.bar-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;width:40px;flex-shrink:0;color:var(--off)}
+.bar-track{flex:1;background:rgba(255,255,255,.06);border-radius:3px;height:18px;overflow:hidden}
+.bar-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:#fff;transition:width .6s ease}
+.bar-fill.bl{background:var(--blue2)}.bar-fill.or{background:var(--orange)}
+.bar-axis{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:2px}
+
+/* ── POSSESSION ── */
+.poss-top{margin-bottom:14px}
+.poss-lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.poss-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;color:var(--off)}
+.poss-subtitle{font-size:10px;color:var(--muted)}
+.big-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.big-bar-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;width:44px;flex-shrink:0;color:var(--off)}
+.big-bar-track{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:26px;overflow:hidden}
+.big-bar-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;color:#fff;transition:width .6s ease}
+.poss-bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+.formula-box{background:rgba(0,107,182,.1);border:1px solid rgba(0,107,182,.25);border-radius:6px;padding:10px}
+.formula-t{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:6px}
+.formula-eq{font-size:10px;color:var(--off);text-align:center;margin-bottom:6px;line-height:1.5}
+.formula-calc{font-size:11px;color:var(--off);text-align:center;margin:3px 0}
+.donut-center-area{text-align:center}
+.donut-lbls{display:flex;justify-content:space-around;margin-top:5px}
+.donut-lbl{display:flex;flex-direction:column;align-items:center}
+.donut-pct{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900}
+.donut-tname{font-size:9px;color:var(--muted);margin-top:1px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.donut-sub{font-size:9px;color:var(--muted);text-align:center;margin-top:3px}
+
+/* ── PLAYER TABLE ── */
+.pl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.pltbl{width:100%;border-collapse:collapse;min-width:360px}
+.pltbl th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:5px 5px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;cursor:pointer}
+.pltbl th:first-child{text-align:left}
+.pltbl th.sort-asc::after{content:' ↑';color:var(--orange)}
+.pltbl th.sort-desc::after{content:' ↓';color:var(--orange)}
+.pltbl td{padding:7px 5px;text-align:center;border-bottom:1px solid rgba(30,58,95,.35);font-size:12px;vertical-align:middle}
+.pltbl td:first-child{text-align:left}
+.pltbl tr:last-child td{border-bottom:none}
+.pltbl tr.highlighted-row{background:rgba(245,132,38,.1)}
+.pcell{display:flex;align-items:center;gap:7px}
+.pava{width:28px;height:28px;border-radius:50%;flex-shrink:0;overflow:hidden;border:1.5px solid}
+.pava.nyk{background:linear-gradient(135deg,#003f7f,#006bb6);border-color:var(--orange)}
+.pava.sas{background:linear-gradient(135deg,#1a1a2e,#2a2a4e);border-color:var(--silver)}
+.pname{font-size:11px;font-weight:600;color:var(--off);white-space:nowrap}
+.ticon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:7px;font-weight:900;margin:0 auto;flex-shrink:0}
+.ticon.nyk{background:var(--blue);color:var(--orange);border:1.5px solid var(--orange)}
+.ticon.sas{background:#1a1a2e;color:var(--silver);border:1.5px solid var(--silver)}
+.ptscell{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;color:#fff}
+.pmcell{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900}
+.pmcell.pos{color:var(--green)}.pmcell.neg{color:var(--red)}.pmcell.nut{color:var(--muted)}
+
+/* player filter pills */
+.pl-filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.pf-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.pf-chip:hover,.pf-chip.on{background:var(--blue2);border-color:var(--blue2);color:#fff}
+
+/* ── ANALYST SUMMARY ── */
+.finding-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:9px;font-size:12px;color:var(--off);line-height:1.4}
+.chk{width:18px;height:18px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#fff;font-weight:900;margin-top:1px}
+.rec-intro{font-size:12px;color:var(--off);margin-bottom:10px;line-height:1.4;display:flex;gap:10px;align-items:flex-start}
+.rec-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.rec-list li{display:flex;gap:8px;font-size:12px;color:var(--off);line-height:1.4}
+.rec-num{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--cyan);width:16px;flex-shrink:0}
+.divider{height:1px;background:var(--border);margin:12px 0}
+
+/* ── PARAMETER PANEL ── */
+.param-panel{background:rgba(0,0,0,.5);position:fixed;inset:0;z-index:200;display:none;align-items:flex-end}
+.param-panel.open{display:flex}
+.param-sheet{background:#0d1b2e;border-top:2px solid var(--orange);border-radius:16px 16px 0 0;padding:20px;width:100%;max-height:80vh;overflow-y:auto}
+.ps-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.ps-close{font-size:20px;color:var(--muted);cursor:pointer;background:none;border:none}
+.param-group{margin-bottom:16px}
+.param-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
+.param-options{display:flex;flex-wrap:wrap;gap:6px}
+.param-opt{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.param-opt:hover,.param-opt.sel{background:var(--orange);border-color:var(--orange);color:#fff}
+.param-opt.sel-blue{background:var(--blue2);border-color:var(--blue2);color:#fff}
+
+/* ── INSIGHT PILL ── */
+.insight{background:rgba(244,105,42,.08);border:1px solid rgba(244,105,42,.2);border-radius:6px;padding:8px 10px;margin-top:10px;font-size:11px;color:var(--off);line-height:1.5;display:flex;gap:7px;align-items:flex-start}
+.insight-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ── TREND MINI CHART ── */
+.mini-trend{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;align-items:flex-end;height:44px;margin-top:8px}
+.trend-bar{border-radius:2px 2px 0 0;min-height:4px;transition:height .5s ease}
+.trend-labels{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:3px}
+.tl{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;text-align:center;color:var(--muted)}
+.tl.active-lbl{color:var(--orange)}
+
+/* ── SCORE BANNER ── */
+.score-banner{background:linear-gradient(135deg,rgba(0,107,182,.15),rgba(245,132,38,.15));border:1px solid rgba(245,132,38,.25);border-radius:8px;padding:12px;margin-bottom:10px;text-align:center}
+.sb-game-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sb-score-row{display:flex;align-items:center;justify-content:center;gap:16px}
+.sb-team{display:flex;flex-direction:column;align-items:center;gap:3px}
+.sb-tname{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.sb-pts{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;line-height:1}
+.sb-vs{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--muted)}
+.sb-result-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:6px}
+.sb-result-badge.win{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.3)}
+.sb-result-badge.loss{background:rgba(231,76,60,.15);color:var(--red);border:1px solid rgba(231,76,60,.3)}
+.sb-result-badge.tbd{background:rgba(122,154,184,.1);color:var(--muted);border:1px solid var(--border)}
+
+/* ── QUARTER BREAKDOWN ── */
+.quarter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:8px}
+.qcell{text-align:center;padding:6px 2px;background:rgba(255,255,255,.03);border-radius:4px}
+.qcell-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase}
+.qcell-nyk{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900}
+.qcell-sas{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900}
+.qcell-nyk.hi{color:var(--orange)}.qcell-sas.hi{color:var(--blue2)}
+.q-divider{width:100%;height:1px;background:var(--border);margin:3px 0}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:12px 16px 30px;font-size:11px;color:var(--muted);font-style:italic;border-top:1px solid var(--border);margin-top:10px}
+
+/* ── FLOATING PARAMS BTN ── */
+.fab{position:fixed;bottom:20px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--orange);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 16px rgba(245,132,38,.4);z-index:150;transition:transform .2s}
+.fab:hover{transform:scale(1.1)}
+
+/* ── UPCOMING PILL ── */
+.upcoming-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:rgba(123,94,167,.2);color:#c07ef5;border:1px solid rgba(123,94,167,.4);margin-left:6px}
+.live-badge{background:rgba(231,76,60,.2);color:var(--red);border-color:rgba(231,76,60,.4)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- FLOATING PARAMETERS BUTTON -->
+<button class="fab" onclick="openParams()" title="Filters & Parameters">⚙️</button>
+
+<!-- PARAMETERS PANEL (slide up sheet) -->
+<div class="param-panel" id="paramPanel">
+  <div class="param-sheet">
+    <div class="ps-title">
+      Filters &amp; Parameters
+      <button class="ps-close" onclick="closeParams()">✕</button>
+    </div>
+
+    <div class="param-group">
+      <span class="param-label">📅 Select Game(s)</span>
+      <div class="param-options" id="gameParamOpts">
+        <button class="param-opt sel" data-game="all" onclick="paramGame(this)">All Games</button>
+        <button class="param-opt" data-game="1" onclick="paramGame(this)">Game 1</button>
+        <button class="param-opt" data-game="2" onclick="paramGame(this)">Game 2</button>
+        <button class="param-opt" data-game="3" onclick="paramGame(this)">Game 3</button>
+        <button class="param-opt" data-game="4" onclick="paramGame(this)">Game 4</button>
+        <button class="param-opt" data-game="5" onclick="paramGame(this)" style="background:rgba(42,26,62,.4);border-color:#7b5ea7;color:#c07ef5">Game 5 ⚡</button>
+        <button class="param-opt" data-game="6" onclick="paramGame(this)" style="background:rgba(42,26,62,.4);border-color:#7b5ea7;color:#c07ef5">Game 6 ⚡</button>
+        <button class="param-opt" data-game="7" onclick="paramGame(this)" style="background:rgba(42,26,62,.4);border-color:#7b5ea7;color:#c07ef5">Game 7 ⚡</button>
+      </div>
+    </div>
+
+    <div class="param-group">
+      <span class="param-label">🏀 View Perspective</span>
+      <div class="param-options">
+        <button class="param-opt sel-blue" data-view="both" onclick="paramView(this)">Both Teams</button>
+        <button class="param-opt" data-view="NYK" onclick="paramView(this)">Knicks Only</button>
+        <button class="param-opt" data-view="SAS" onclick="paramView(this)">Spurs Only</button>
+      </div>
+    </div>
+
+    <div class="param-group">
+      <span class="param-label">📊 Stat Focus</span>
+      <div class="param-options">
+        <button class="param-opt sel-blue" data-stat="all" onclick="paramStat(this)">All Stats</button>
+        <button class="param-opt" data-stat="scoring" onclick="paramStat(this)">Scoring</button>
+        <button class="param-opt" data-stat="defense" onclick="paramStat(this)">Defense/TOV</button>
+        <button class="param-opt" data-stat="rebounding" onclick="paramStat(this)">Rebounding</button>
+        <button class="param-opt" data-stat="efficiency" onclick="paramStat(this)">Efficiency</button>
+      </div>
+    </div>
+
+    <div class="param-group">
+      <span class="param-label">❓ Ask a Question</span>
+      <div class="param-options" style="flex-direction:column;gap:6px">
+        <button class="param-opt" style="text-align:left;border-radius:6px;width:100%" onclick="askQuestion('turnovers')">🔥 Who's winning the turnover battle?</button>
+        <button class="param-opt" style="text-align:left;border-radius:6px;width:100%" onclick="askQuestion('rebounds')">💪 Does rebounding win games?</button>
+        <button class="param-opt" style="text-align:left;border-radius:6px;width:100%" onclick="askQuestion('clutch')">⏱ Who wins close games?</button>
+        <button class="param-opt" style="text-align:left;border-radius:6px;width:100%" onclick="askQuestion('mvp')">⭐ Who is the series MVP?</button>
+        <button class="param-opt" style="text-align:left;border-radius:6px;width:100%" onclick="askQuestion('prediction')">🔮 Predict the series winner</button>
+      </div>
+    </div>
+
+    <button onclick="closeParams()" style="width:100%;padding:12px;background:var(--orange);border:none;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fff;cursor:pointer;margin-top:6px">Apply &amp; Close</button>
+  </div>
+</div>
+
+<!-- FILTER CHIPS BAR -->
+<div class="filter-bar">
+  <span class="fb-label">Games:</span>
+  <div class="fb-chips" id="filterChips">
+    <button class="chip all-chip on" data-g="all" onclick="filterGame('all',this)">All</button>
+    <button class="chip" data-g="1" onclick="filterGame('1',this)">G1</button>
+    <button class="chip" data-g="2" onclick="filterGame('2',this)">G2</button>
+    <button class="chip" data-g="3" onclick="filterGame('3',this)">G3</button>
+    <button class="chip" data-g="4" onclick="filterGame('4',this)">G4</button>
+    <button class="chip g5" data-g="5" onclick="filterGame('5',this)">G5 ⚡</button>
+    <button class="chip g6" data-g="6" onclick="filterGame('6',this)">G6 ⚡</button>
+    <button class="chip g7" data-g="7" onclick="filterGame('7',this)">G7 ⚡</button>
+  </div>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<div class="hdr">
+  <div class="hdr-top">
+    <span class="menu-icon" onclick="openParams()">☰</span>
+    <div class="hdr-title-wrap">
+      <div class="hdr-title">Sports Analytics Academy</div>
+      <div class="hdr-sub">2026 NBA Finals Data Challenge</div>
+    </div>
+    <span style="width:24px"></span>
+  </div>
+  <div class="hdr-logos">
+    <div class="logo-item">
+      <svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="21" fill="#1a1a2e" stroke="#c4ced4" stroke-width="2.5"/><g fill="#c4ced4"><polygon points="23,4 25.5,12 23,10.5 20.5,12"/><polygon points="42,23 34,20.5 35.5,23 34,25.5"/><polygon points="23,42 20.5,34 23,35.5 25.5,34"/><polygon points="4,23 12,25.5 10.5,23 12,20.5"/><polygon points="36,10 29,18 30.5,16 28,19" opacity=".7"/><polygon points="36,36 28,28 30,30 28,27" opacity=".7"/><polygon points="10,36 18,29 16,30 19,28" opacity=".7"/><polygon points="10,10 18,18 16,16 19,19" opacity=".7"/></g>
+      <text x="23" y="27" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="9" font-weight="900" fill="#c4ced4">SPURS</text></svg>
+      <span class="logo-lbl" style="color:var(--silver)">SPURS</span>
+    </div>
+    <div style="width:20px"></div>
+    <div class="logo-item">
+      <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" fill="#006bb6" stroke="#f58426" stroke-width="2.5"/><circle cx="26" cy="26" r="18" fill="none" stroke="#f58426" stroke-width="1.2" opacity=".6"/><path d="M26,4 Q37,15 37,26 Q37,37 26,48" fill="none" stroke="#f58426" stroke-width="1.1" opacity=".7"/><path d="M26,4 Q15,15 15,26 Q15,37 26,48" fill="none" stroke="#f58426" stroke-width="1.1" opacity=".7"/><line x1="4" y1="26" x2="48" y2="26" stroke="#f58426" stroke-width="1.1" opacity=".7"/>
+      <text x="26" y="23" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="6" font-weight="900" fill="white">NEW YORK</text>
+      <text x="26" y="33" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="9.5" font-weight="900" fill="#f58426">KNICKS</text></svg>
+      <span class="logo-lbl" style="color:var(--orange)">KNICKS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERIES STATUS ═══ -->
+<div class="section">
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:6px">Series Status</div>
+  <div class="series-score-big" id="seriesScore">
+    <span style="color:var(--orange)">KNICKS</span>
+    <span style="color:#fff"> LEAD SERIES </span>
+    <span style="color:var(--orange)">3</span><span style="color:#fff">-</span><span style="color:var(--silver)">1</span>
+  </div>
+  <div class="series-meta-row" id="seriesMeta">
+    Games Played: <b>4</b> &nbsp;|&nbsp; Spurs Wins: <b>1</b> &nbsp;|&nbsp; Knicks Wins: <b>3</b>
+  </div>
+
+  <!-- Win-loss dot track -->
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:10px" id="dotTrack">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:var(--orange)" title="G1 NYK Win"></div>
+      <span style="font-size:8px;color:var(--muted)">G1</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:var(--orange)" title="G2 NYK Win"></div>
+      <span style="font-size:8px;color:var(--muted)">G2</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:var(--blue2)" title="G3 SAS Win"></div>
+      <span style="font-size:8px;color:var(--muted)">G3</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:var(--orange)" title="G4 NYK Win"></div>
+      <span style="font-size:8px;color:var(--muted)">G4</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.1);border:1.5px dashed var(--border)"></div>
+      <span style="font-size:8px;color:var(--muted)">G5</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.1);border:1.5px dashed var(--border)"></div>
+      <span style="font-size:8px;color:var(--muted)">G6</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.1);border:1.5px dashed var(--border)"></div>
+      <span style="font-size:8px;color:var(--muted)">G7</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INSIGHT BANNER (dynamic) ═══ -->
+<div class="section" id="insightBanner" style="padding:10px 14px">
+  <div class="insight" style="margin-top:0;background:transparent;border:none;padding:0">
+    <span class="insight-icon">💡</span>
+    <span id="insightText">Knicks lead 3-1. They win when turnovers stay below 10. Tap a game chip above or ⚙️ to explore deeper.</span>
+  </div>
+</div>
+
+<!-- ═══ SCORE BANNER (single game) ═══ -->
+<div class="section" id="scoreBannerSection" style="display:none">
+  <div class="score-banner" id="scoreBanner"></div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:center;margin:10px 0 6px">Quarter Breakdown</div>
+  <div class="quarter-grid" id="quarterGrid"></div>
+</div>
+
+<!-- ═══ GAME RESULTS ═══ -->
+<div class="section" id="gameResultsSection">
+  <div class="section-title">Game Results</div>
+  <div id="gameResultsList"></div>
+
+  <!-- Points Trend Mini Chart -->
+  <div style="margin-top:14px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Points Per Game Trend</div>
+    <div style="display:flex;gap:4px;align-items:flex-end">
+      <div style="font-size:9px;color:var(--muted);width:26px;flex-shrink:0">NYK</div>
+      <div class="mini-trend" id="trendNYK" style="flex:1"></div>
+    </div>
+    <div style="display:flex;gap:4px;align-items:flex-end;margin-top:4px">
+      <div style="font-size:9px;color:var(--muted);width:26px;flex-shrink:0">SAS</div>
+      <div class="mini-trend" id="trendSAS" style="flex:1"></div>
+    </div>
+    <div style="display:flex;gap:4px;margin-top:3px">
+      <div style="width:30px"></div>
+      <div class="trend-labels" id="trendLabels" style="flex:1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KPI CARDS ═══ -->
+<div class="section">
+  <div class="section-title" id="kpiTitle">Series KPI Summary</div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-icon">🏀</div><div class="kpi-label">Points</div><div class="kpi-num c-cyan" id="kpiPts">439</div><div class="kpi-sub" id="kpiPtsSub">Spurs: 220 / Knicks: 219</div></div>
+    <div class="kpi"><div class="kpi-icon">🤸</div><div class="kpi-label">Rebounds</div><div class="kpi-num c-green" id="kpiReb">182</div><div class="kpi-sub" id="kpiRebSub">Spurs: 95 / Knicks: 87</div></div>
+    <div class="kpi"><div class="kpi-icon">↩️</div><div class="kpi-label">Turnovers</div><div class="kpi-num c-orange" id="kpiTov">48</div><div class="kpi-sub" id="kpiTovSub">Spurs: 26 / Knicks: 22</div></div>
+    <div class="kpi"><div class="kpi-icon">🎯</div><div class="kpi-label">FG%</div><div class="kpi-num c-purple" id="kpiFg">46.4%</div><div class="kpi-sub" id="kpiFgSub">Spurs: 45.3% / Knicks: 47.5%</div></div>
+  </div>
+</div>
+
+<!-- ═══ FOUR FACTORS ═══ -->
+<div class="section" id="ffSection">
+  <div class="section-title">Four Factors</div>
+  <div class="ff-2col">
+    <div class="ff-block">
+      <div class="ff-ct">FG% Comparison</div>
+      <div class="bar-row"><span class="bar-lbl">Spurs</span><div class="bar-track"><div class="bar-fill bl" id="ffFgSAS" style="width:45.3%">45.3%</div></div></div>
+      <div class="bar-row"><span class="bar-lbl">Knicks</span><div class="bar-track"><div class="bar-fill or" id="ffFgNYK" style="width:47.5%">47.5%</div></div></div>
+      <div class="bar-axis"><span>0%</span><span>50%</span><span>100%</span></div>
+    </div>
+    <div class="ff-block">
+      <div class="ff-ct">Turnover Comparison</div>
+      <div class="bar-row"><span class="bar-lbl">Spurs</span><div class="bar-track"><div class="bar-fill bl" id="ffTovSAS" style="width:52%">13.0%</div></div></div>
+      <div class="bar-row"><span class="bar-lbl">Knicks</span><div class="bar-track"><div class="bar-fill or" id="ffTovNYK" style="width:42%">10.5%</div></div></div>
+      <div class="bar-axis"><span>0%</span><span>12.5%</span><span>25%</span></div>
+    </div>
+    <div class="ff-block">
+      <div class="ff-ct">Rebounding Comparison</div>
+      <div class="bar-row"><span class="bar-lbl">Spurs</span><div class="bar-track"><div class="bar-fill bl" id="ffRebSAS" style="width:52.2%">52.2%</div></div></div>
+      <div class="bar-row"><span class="bar-lbl">Knicks</span><div class="bar-track"><div class="bar-fill or" id="ffRebNYK" style="width:47.8%">47.8%</div></div></div>
+      <div class="bar-axis"><span>0%</span><span>50%</span><span>100%</span></div>
+    </div>
+    <div class="ff-block">
+      <div class="ff-ct">Free Throw Rate</div>
+      <div class="bar-row"><span class="bar-lbl">Spurs</span><div class="bar-track"><div class="bar-fill bl" id="ffFtSAS" style="width:46.2%">23.1%</div></div></div>
+      <div class="bar-row"><span class="bar-lbl">Knicks</span><div class="bar-track"><div class="bar-fill or" id="ffFtNYK" style="width:50.8%">25.4%</div></div></div>
+      <div class="bar-axis"><span>0%</span><span>25%</span><span>50%</span></div>
+    </div>
+  </div>
+  <div class="insight" id="ffInsight">
+    <span class="insight-icon">📊</span>
+    <span>Knicks win the FG% and FT Rate factors. Spurs lead in Rebounding. Turnovers are the decisive edge for New York.</span>
+  </div>
+</div>
+
+<!-- ═══ POSSESSION BATTLE ═══ -->
+<div class="section">
+  <div class="section-title">Possession Battle</div>
+  <div class="poss-top">
+    <div class="poss-lbl-row">
+      <span class="poss-title">Possession Score</span>
+      <span class="poss-subtitle">(Rebounds - Turnovers)</span>
+    </div>
+    <div class="big-bar-row"><span class="big-bar-lbl">Spurs</span><div class="big-bar-track"><div class="big-bar-fill" style="background:var(--blue2)" id="possSAS">69</div></div></div>
+    <div class="big-bar-row"><span class="big-bar-lbl">Knicks</span><div class="big-bar-track"><div class="big-bar-fill" style="background:var(--orange)" id="possNYK">65</div></div></div>
+    <div class="bar-axis"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div>
+  </div>
+  <div class="poss-bottom">
+    <div class="formula-box">
+      <div class="formula-t">Formula</div>
+      <div class="formula-eq">Score = <span style="color:var(--green)">Rebounds</span> - <span style="color:var(--orange)">Turnovers</span></div>
+      <div class="formula-calc" id="possCalcSAS">Spurs: <span style="color:var(--green)">95</span>-<span style="color:var(--orange)">26</span>=<b>69</b></div>
+      <div class="formula-calc" id="possCalcNYK">Knicks: <span style="color:var(--green)">87</span>-<span style="color:var(--orange)">22</span>=<b>65</b></div>
+    </div>
+    <div class="donut-center-area">
+      <svg viewBox="0 0 110 110" width="108" height="108" style="display:block;margin:0 auto">
+        <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="20"/>
+        <circle cx="55" cy="55" r="42" fill="none" stroke="#1a7fd4" stroke-width="20" id="donutSAS"
+          stroke-dasharray="136 264" stroke-dashoffset="66" transform="rotate(-90 55 55)"/>
+        <circle cx="55" cy="55" r="42" fill="none" stroke="#f58426" stroke-width="20" id="donutNYK"
+          stroke-dasharray="128 264" stroke-dashoffset="-70" transform="rotate(-90 55 55)"/>
+        <text x="55" y="62" text-anchor="middle" font-size="20">🏀</text>
+      </svg>
+      <div class="donut-lbls">
+        <div class="donut-lbl"><div class="donut-pct" style="color:var(--blue2)" id="donutPctSAS">51.5%</div><div class="donut-tname">Spurs</div></div>
+        <div class="donut-lbl"><div class="donut-pct" style="color:var(--orange)" id="donutPctNYK">48.5%</div><div class="donut-tname">Knicks</div></div>
+      </div>
+      <div class="donut-sub">% of Total Possessions</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PLAYER IMPACT ═══ -->
+<div class="section">
+  <div class="section-title">Player Impact <span style="font-size:10px;font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0">(Total Points)</span></div>
+  <div class="pl-filters" id="plFilters">
+    <button class="pf-chip on" data-pf="all" onclick="filterPlayers('all',this)">All</button>
+    <button class="pf-chip" data-pf="NYK" onclick="filterPlayers('NYK',this)">Knicks</button>
+    <button class="pf-chip" data-pf="SAS" onclick="filterPlayers('SAS',this)">Spurs</button>
+    <button class="pf-chip" data-pf="G" onclick="filterPlayers('G',this)">Guards</button>
+    <button class="pf-chip" data-pf="F" onclick="filterPlayers('F',this)">Forwards</button>
+    <button class="pf-chip" data-pf="C" onclick="filterPlayers('C',this)">Centers</button>
+  </div>
+  <div class="pl-scroll">
+    <table class="pltbl" id="playerTable">
+      <thead>
+        <tr>
+          <th onclick="sortPlayers('name')">Player</th>
+          <th onclick="sortPlayers('team')">Team</th>
+          <th onclick="sortPlayers('pts')" class="sort-desc">PTS</th>
+          <th onclick="sortPlayers('reb')">REB</th>
+          <th onclick="sortPlayers('ast')">AST</th>
+          <th onclick="sortPlayers('usg')">USG%</th>
+          <th onclick="sortPlayers('pm')">+/-</th>
+        </tr>
+      </thead>
+      <tbody id="playerBody"></tbody>
+    </table>
+  </div>
+  <div class="insight" id="playerInsight" style="margin-top:10px">
+    <span class="insight-icon">⭐</span>
+    <span>Brunson leads all scorers (128 pts, +23). Wembanyama is the statistical standout for SAS (104 pts, 38 reb, 16 blk) but is -12 in series margin.</span>
+  </div>
+</div>
+
+<!-- ═══ ANALYST SUMMARY ═══ -->
+<div class="section" id="analystSection">
+  <div class="section-title">Analyst Summary</div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px">Key Findings</div>
+  <div id="findingsList"></div>
+  <div class="divider"></div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px">Recommendation</div>
+  <div id="recSection"></div>
+</div>
+
+<div class="footer">Data is through Game 4 of the 2026 NBA Finals &nbsp;·&nbsp; Game 5: Sat Jun 13 @ AT&amp;T Center</div>
+
+<!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const GAMES = {
+  1: {
+    date:'Jun 3', loc:'AT&T Center', winner:'NYK',
+    score:{NYK:105,SAS:95}, result:'NYK +10',
+    quarters:{Q1:{NYK:19,SAS:27},Q2:{NYK:29,SAS:28},Q3:{NYK:28,SAS:21},Q4:{NYK:29,SAS:19}},
+    stats:{
+      NYK:{pts:105,reb:60,tov:9,fg:41.5,efg:47.3,oreb:10,ftRate:19.1,poss:100.92,possScore:51},
+      SAS:{pts:95,reb:60,tov:13,fg:36.0,efg:42.1,oreb:14,ftRate:28.1,poss:99.0,possScore:47}
+    }
+  },
+  2: {
+    date:'Jun 5', loc:'AT&T Center', winner:'NYK',
+    score:{NYK:105,SAS:104}, result:'NYK +1',
+    quarters:{Q1:{NYK:25,SAS:34},Q2:{NYK:31,SAS:18},Q3:{NYK:28,SAS:23},Q4:{NYK:21,SAS:29}},
+    stats:{
+      NYK:{pts:105,reb:54,tov:15,fg:41.6,efg:50.0,oreb:10,ftRate:23.6,poss:103.24,possScore:39},
+      SAS:{pts:104,reb:53,tov:16,fg:47.4,efg:54.5,oreb:5,ftRate:34.6,poss:100.88,possScore:37}
+    }
+  },
+  3: {
+    date:'Jun 8', loc:'Madison Square Garden', winner:'SAS',
+    score:{NYK:111,SAS:115}, result:'SAS +4',
+    quarters:{Q1:{NYK:22,SAS:33},Q2:{NYK:42,SAS:24},Q3:{NYK:27,SAS:35},Q4:{NYK:20,SAS:23}},
+    stats:{
+      NYK:{pts:111,reb:56,tov:13,fg:45.5,efg:52.8,oreb:12,ftRate:25.0,poss:98.68,possScore:43},
+      SAS:{pts:115,reb:48,tov:8,fg:46.4,efg:53.6,oreb:6,ftRate:38.1,poss:100.08,possScore:40}
+    }
+  },
+  4: {
+    date:'Jun 10', loc:'Madison Square Garden', winner:'NYK',
+    score:{NYK:107,SAS:106}, result:'NYK +1',
+    quarters:{Q1:{NYK:22,SAS:41},Q2:{NYK:27,SAS:35},Q3:{NYK:26,SAS:14},Q4:{NYK:32,SAS:16}},
+    stats:{
+      NYK:{pts:107,reb:53,tov:15,fg:46.2,efg:55.8,oreb:8,ftRate:35.9,poss:97.32,possScore:38},
+      SAS:{pts:106,reb:50,tov:12,fg:41.9,efg:51.7,oreb:12,ftRate:23.3,poss:94.8,possScore:38}
+    }
+  },
+  5: {date:'Jun 13', loc:'AT&T Center', winner:null, score:{NYK:null,SAS:null}, quarters:null, stats:null},
+  6: {date:'Jun 16*', loc:'Madison Square Garden', winner:null, score:{NYK:null,SAS:null}, quarters:null, stats:null},
+  7: {date:'Jun 20*', loc:'AT&T Center', winner:null, score:{NYK:null,SAS:null}, quarters:null, stats:null},
+};
+
+const PLAYERS_ALL = [
+  {name:'Jalen Brunson',team:'NYK',pos:'G',pts:118,reb:18,ast:20,stl:11,blk:0,tov:14,fg:39.6,usg:28.7,pm:8},
+  {name:'OG Anunoby',team:'NYK',pos:'F',pts:95,reb:16,ast:6,stl:5,blk:6,tov:3,fg:57.4,usg:22.1,pm:-1},
+  {name:'Karl-Anthony Towns',team:'NYK',pos:'C',pts:63,reb:43,ast:11,stl:5,blk:4,tov:8,fg:54.8,usg:20.8,pm:48},
+  {name:'Josh Hart',team:'NYK',pos:'F',pts:25,reb:38,ast:22,stl:8,blk:3,tov:7,fg:39.1,usg:12.4,pm:21},
+  {name:'Mikal Bridges',team:'NYK',pos:'G',pts:38,reb:16,ast:13,stl:4,blk:4,tov:4,fg:45.5,usg:16.9,pm:7},
+  {name:'Landry Shamet',team:'NYK',pos:'G',pts:29,reb:9,ast:5,stl:0,blk:1,tov:0,fg:40.6,usg:13.2,pm:-14},
+  {name:'Jose Alvarado',team:'NYK',pos:'G',pts:21,reb:12,ast:7,stl:2,blk:0,tov:2,fg:42.1,usg:9.1,pm:21},
+  {name:'Mitchell Robinson',team:'NYK',pos:'C',pts:16,reb:18,ast:1,stl:2,blk:4,tov:3,fg:50.0,usg:8.5,pm:-27},
+  {name:'Jordan Clarkson',team:'NYK',pos:'G',pts:12,reb:5,ast:2,stl:1,blk:0,tov:4,fg:45.5,usg:9.9,pm:12},
+  {name:'Miles McBride',team:'NYK',pos:'G',pts:11,reb:6,ast:8,stl:0,blk:1,tov:5,fg:20.0,usg:7.4,pm:-2},
+  {name:'Victor Wembanyama',team:'SAS',pos:'C',pts:111,reb:42,ast:11,stl:6,blk:13,tov:12,fg:43.5,usg:30.5,pm:11},
+  {name:'Stephon Castle',team:'SAS',pos:'G',pts:67,reb:22,ast:17,stl:3,blk:2,tov:11,fg:43.1,usg:21.5,pm:-20},
+  {name:'Dylan Harper',team:'SAS',pos:'G',pts:65,reb:27,ast:14,stl:2,blk:0,tov:8,fg:46.2,usg:19.8,pm:11},
+  {name:'De\'Aaron Fox',team:'SAS',pos:'G',pts:57,reb:15,ast:25,stl:5,blk:4,tov:13,fg:38.2,usg:21.9,pm:-3},
+  {name:'Devin Vassell',team:'SAS',pos:'F',pts:52,reb:27,ast:12,stl:3,blk:1,tov:3,fg:61.5,usg:18.3,pm:13},
+  {name:'Julian Champagnie',team:'SAS',pos:'F',pts:41,reb:20,ast:8,stl:6,blk:2,tov:0,fg:37.1,usg:14.1,pm:-12},
+  {name:'Keldon Johnson',team:'SAS',pos:'F',pts:15,reb:12,ast:4,stl:3,blk:0,tov:5,fg:33.3,usg:9.2,pm:8},
+  {name:'Carter Bryant',team:'SAS',pos:'F',pts:9,reb:3,ast:1,stl:2,blk:2,tov:1,fg:66.7,usg:5.1,pm:1},
+  {name:'Luke Kornet',team:'SAS',pos:'C',pts:3,reb:11,ast:3,stl:3,blk:1,tov:0,fg:0.0,usg:3.2,pm:-19},
+];
+
+// Per-game player snapshots (G1–G4 top performers)
+const PLAYER_GAME = {
+  1:{NYK:[{n:'Jalen Brunson',pts:30},{n:'KAT',pts:18},{n:'OG Anunoby',pts:17}],
+     SAS:[{n:'Wembanyama',pts:26},{n:'Dylan Harper',pts:16},{n:'Champagnie',pts:16}]},
+  2:{NYK:[{n:'Jalen Brunson',pts:20},{n:'KAT',pts:21},{n:'OG Anunoby',pts:17}],
+     SAS:[{n:'Wembanyama',pts:29},{n:'De\'Aaron Fox',pts:20},{n:'Devin Vassell',pts:14}]},
+  3:{NYK:[{n:'Jalen Brunson',pts:32},{n:'OG Anunoby',pts:28},{n:'Josh Hart',pts:16}],
+     SAS:[{n:'Wembanyama',pts:32},{n:'Stephon Castle',pts:23},{n:'Dylan Harper',pts:13}]},
+  4:{NYK:[{n:'Jalen Brunson',pts:36},{n:'OG Anunoby',pts:33},{n:'KAT',pts:13}],
+     SAS:[{n:'Wembanyama',pts:24},{n:'Dylan Harper',pts:21},{n:'Devin Vassell',pts:18}]},
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentGame = 'all';
+let playerFilter = 'all';
+let sortKey = 'pts';
+let sortDir = -1;
+let viewPerspective = 'both';
+let statFocus = 'all';
+
+// ─────────────────────────────────────────────
+// INSIGHTS DB
+// ─────────────────────────────────────────────
+const INSIGHTS = {
+  all: 'Knicks lead 3-1. They win when turnovers stay ≤9 (G1: 9 TOV → won by 10). Tap a game chip above or ⚙️ to explore.',
+  1:   'Game 1: Knicks dominated with only 9 turnovers. The lowest of the series — they won by 10. NYK\'s Q3+Q4 outscoring sealed it.',
+  2:   'Game 2: Closest game yet (1 point). Both teams combined for 31 turnovers but NYK\'s bench scored 28 pts to hold on.',
+  3:   'Game 3: Spurs\' only win. Their secret? Just 8 turnovers — least of any team in any game. Wembanyama dropped 32.',
+  4:   'Game 4: Biggest NYK comeback. Down 29 after Q2, they outscored SAS 58-30 in Q3+Q4. Brunson 36 + Anunoby 33.',
+  5:   '⚡ Game 5 is UPCOMING (Jun 13 @ AT&T Center). Spurs need a win to keep their season alive.',
+  6:   '⚡ Game 6 is pending — only plays if Spurs win G5.',
+  7:   '⚡ Game 7 would be the ultimate winner-take-all at AT&T Center.',
+};
+
+const FINDINGS = {
+  all: [
+    'Knicks are protecting the ball better with fewer turnovers.',
+    'Spurs dominate the boards, especially offensively.',
+    'Knicks have a slight edge in shooting efficiency.',
+    'Turnovers are the biggest difference in this series.',
+  ],
+  1: [
+    'NYK\'s 9 turnovers (series low) was the decisive factor.',
+    'Both teams tied at 60 rebounds — possession control was key.',
+    'Knicks outscored Spurs 57-40 in Q3+Q4 combined.',
+    'Josh Hart: 15 reb, 6 ast, 4 stl — the unsung hero.',
+  ],
+  2: [
+    'Closest game of the series — decided by 1 point.',
+    'Wembanyama\'s 29 pts on only 8 FTs held the Spurs in it.',
+    'NYK bench scored 27 pts — critical in a 1-point win.',
+    'Despite 15 NYK turnovers, Knicks still found a way.',
+  ],
+  3: [
+    'Spurs\' only win — just 8 turnovers (series low for any team).',
+    'Wembanyama dominant: 32 pts, 8 reb, 3 blk, 6 ast.',
+    'Knicks\' huge Q2 (42 pts) gave hope but SAS closed strong.',
+    'SAS assist/turnover ratio of 3.5 — best of the series.',
+  ],
+  4: [
+    'Knicks overcame a 29-point halftime deficit.',
+    'Brunson (36) + Anunoby (33) = 69 pts combined in a 1-pt win.',
+    'SAS scored only 30 pts in Q3+Q4 after leading by 29.',
+    'NYK\'s closing ability is now an established series pattern.',
+  ],
+  5: ['⚡ Game 5 data not yet available — check back after Jun 13.'],
+  6: ['⚡ Game 6 data pending.'],
+  7: ['⚡ Game 7 data pending.'],
+};
+
+const RECS = {
+  all: {
+    intro: 'For the Spurs to win Game 5 and extend the series, they need to:',
+    items: ['Reduce turnovers to ≤9 (their G3 formula).','Convert defensive rebounds into second-chance points.','Get more consistent scoring from role players.'],
+  },
+  1: { intro:'For Spurs going into Game 2:', items:['Stop giving away early second-quarter leads.','Fox must improve from 23.1% FG.','Protect the ball — 13 TOV is too many at home.'] },
+  2: { intro:'For Spurs going into Game 3:', items:['16 turnovers in a 1-point loss is devastating.','Replicate Wembanyama\'s FT drawing (13 attempts).','Find home-court advantage back in San Antonio.'] },
+  3: { intro:'For Spurs going into Game 4:', items:['Replicate the Game 3 ball security (8 TOV).','Build on Wembanyama\'s 32-point showing.','Start faster after the half — Q3 scoring collapsed in G1/G2.'] },
+  4: { intro:'For Spurs in Game 5 (must-win):', items:['Cannot allow Brunson + Anunoby to both score 30+.','Close out quarters — led by 29 and lost.','Maximize Vassell (61.5% FG this series).'] },
+  5: { intro:'Game 5 preview — Spurs at home:', items:['AT&T Center crowd advantage could be decisive.','Wembanyama must be aggressive early.','Limit turnovers to 9 or fewer — that\'s the series pattern.'] },
+  6: { intro:'Game 6 preview — Knicks at MSG:', items:['Knicks at home undefeated this series (2-0).','Brunson historically elevates in elimination moments.','KAT\'s rebounding could be decisive.'] },
+  7: { intro:'Game 7 — Winner Takes All:', items:['Both teams have been to this moment.','Experience and health will determine the outcome.','Watch for Wembanyama vs. Brunson in the final 2 minutes.'] },
+};
+
+// ─────────────────────────────────────────────
+// RENDER FUNCTIONS
+// ─────────────────────────────────────────────
+function computeStats(gameFilter) {
+  if (gameFilter === 'all') {
+    const played = [1,2,3,4];
+    let nyPts=0,saPts=0,nyReb=0,saReb=0,nyTov=0,saTov=0;
+    let nyFgSum=0,saFgSum=0,nyPoss=0,saPoss=0;
+    played.forEach(g=>{
+      const s=GAMES[g].stats;
+      nyPts+=s.NYK.pts; saPts+=s.SAS.pts;
+      nyReb+=s.NYK.reb; saReb+=s.SAS.reb;
+      nyTov+=s.NYK.tov; saTov+=s.SAS.tov;
+      nyFgSum+=s.NYK.fg; saFgSum+=s.SAS.fg;
+      nyPoss+=s.NYK.poss; saPoss+=s.SAS.poss;
+    });
+    const n=played.length;
+    return {
+      NYK:{pts:nyPts,reb:nyReb,tov:nyTov,fg:(nyFgSum/n).toFixed(1),poss:nyPoss,possScore:nyReb-nyTov},
+      SAS:{pts:saPts,reb:saReb,tov:saTov,fg:(saFgSum/n).toFixed(1),poss:saPoss,possScore:saReb-saTov},
+      combined:{pts:nyPts+saPts,reb:nyReb+saReb,tov:nyTov+saTov,fg:((nyFgSum+saFgSum)/(n*2)).toFixed(1)},
+    };
+  }
+  const gn = parseInt(gameFilter);
+  if (!GAMES[gn].stats) return null;
+  const s = GAMES[gn].stats;
+  return {
+    NYK: s.NYK,
+    SAS: s.SAS,
+    combined:{pts:s.NYK.pts+s.SAS.pts,reb:s.NYK.reb+s.SAS.reb,tov:s.NYK.tov+s.SAS.tov,fg:((s.NYK.fg+s.SAS.fg)/2).toFixed(1)},
+  };
+}
+
+function renderAll() {
+  renderKPI();
+  renderFF();
+  renderPoss();
+  renderGameResults();
+  renderTrend();
+  renderPlayers();
+  renderAnalyst();
+  renderInsight();
+  renderScoreBanner();
+}
+
+function renderKPI() {
+  const s = computeStats(currentGame);
+  if (!s) {
+    document.getElementById('kpiPts').textContent = '—';
+    document.getElementById('kpiReb').textContent = '—';
+    document.getElementById('kpiTov').textContent = '—';
+    document.getElementById('kpiFg').textContent = '—';
+    document.getElementById('kpiPtsSub').textContent = 'No data yet';
+    document.getElementById('kpiRebSub').textContent = '';
+    document.getElementById('kpiTovSub').textContent = '';
+    document.getElementById('kpiFgSub').textContent = '';
+    document.getElementById('kpiTitle').textContent = 'Game ' + currentGame + ' KPIs';
+    return;
+  }
+  const label = currentGame === 'all' ? 'Series KPI Summary' : 'Game ' + currentGame + ' KPIs';
+  document.getElementById('kpiTitle').textContent = label;
+  document.getElementById('kpiPts').textContent = s.combined.pts;
+  document.getElementById('kpiReb').textContent = s.combined.reb;
+  document.getElementById('kpiTov').textContent = s.combined.tov;
+  document.getElementById('kpiFg').textContent = s.combined.fg + '%';
+  document.getElementById('kpiPtsSub').innerHTML = `Spurs: <b>${s.SAS.pts}</b> &nbsp; Knicks: <b>${s.NYK.pts}</b>`;
+  document.getElementById('kpiRebSub').innerHTML = `Spurs: <b>${s.SAS.reb}</b> &nbsp; Knicks: <b>${s.NYK.reb}</b>`;
+  document.getElementById('kpiTovSub').innerHTML = `<span style="color:${s.SAS.tov>s.NYK.tov?'#e74c3c':'#2ecc71'}">Spurs: ${s.SAS.tov}</span> &nbsp; <span style="color:${s.NYK.tov>s.SAS.tov?'#e74c3c':'#2ecc71'}">Knicks: ${s.NYK.tov}</span>`;
+  document.getElementById('kpiFgSub').innerHTML = `Spurs: <b>${s.SAS.fg}%</b> &nbsp; Knicks: <b>${s.NYK.fg}%</b>`;
+}
+
+function renderFF() {
+  const s = computeStats(currentGame);
+  if (!s) return;
+  const sasFg = parseFloat(s.SAS.fg); const nykFg = parseFloat(s.NYK.fg);
+  const maxFg = Math.max(sasFg, nykFg, 55);
+  setBar('ffFgSAS', sasFg, maxFg, sasFg.toFixed(1)+'%');
+  setBar('ffFgNYK', nykFg, maxFg, nykFg.toFixed(1)+'%');
+  const sasTov = s.SAS.tov; const nykTov = s.NYK.tov;
+  const maxTov = Math.max(sasTov, nykTov, 15);
+  setBar('ffTovSAS', sasTov, maxTov*2, sasTov.toFixed(1)+'%');
+  setBar('ffTovNYK', nykTov, maxTov*2, nykTov.toFixed(1)+'%');
+  const totReb = s.NYK.reb + s.SAS.reb;
+  const sasRebPct = totReb ? ((s.SAS.reb/totReb)*100).toFixed(1) : 50;
+  const nykRebPct = totReb ? ((s.NYK.reb/totReb)*100).toFixed(1) : 50;
+  setBar('ffRebSAS', parseFloat(sasRebPct), 100, sasRebPct+'%');
+  setBar('ffRebNYK', parseFloat(nykRebPct), 100, nykRebPct+'%');
+  // FT Rate placeholders
+  setBar('ffFtSAS', 46.2, 100, '23.1%');
+  setBar('ffFtNYK', 50.8, 100, '25.4%');
+
+  const ffMsg = nykFg > sasFg
+    ? `Knicks shoot better (${nykFg}% vs ${sasFg}%). ${nykTov < sasTov ? 'Also fewer turnovers — NYK wins 2 of 4 factors.' : 'But Spurs had fewer turnovers this game.'}`
+    : `Spurs shoot better (${sasFg}% vs ${nykFg}%). ${sasTov < nykTov ? 'And fewer turnovers — Spurs control 2 factors.' : ''}`;
+  document.querySelector('#ffInsight span:last-child').textContent = ffMsg;
+}
+
+function setBar(id, val, max, label) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const pct = Math.min(100, (val/max)*100);
+  el.style.width = pct + '%';
+  el.textContent = label;
+}
+
+function renderPoss() {
+  const s = computeStats(currentGame);
+  if (!s) return;
+  const sasPoss = s.SAS.possScore; const nykPoss = s.NYK.possScore;
+  const maxP = Math.max(Math.abs(sasPoss), Math.abs(nykPoss), 40);
+  const sasPct = Math.min(100, Math.max(10, (sasPoss/maxP)*80));
+  const nykPct = Math.min(100, Math.max(10, (nykPoss/maxP)*80));
+  document.getElementById('possSAS').style.width = sasPct+'%';
+  document.getElementById('possSAS').textContent = sasPoss;
+  document.getElementById('possNYK').style.width = nykPct+'%';
+  document.getElementById('possNYK').textContent = nykPoss;
+
+  const totalPoss = s.NYK.poss + s.SAS.poss;
+  const sasPossShare = totalPoss ? ((s.SAS.poss/totalPoss)*100).toFixed(1) : 51.5;
+  const nykPossShare = totalPoss ? ((s.NYK.poss/totalPoss)*100).toFixed(1) : 48.5;
+  document.getElementById('donutPctSAS').textContent = sasPossShare + '%';
+  document.getElementById('donutPctNYK').textContent = nykPossShare + '%';
+
+  // Donut SVG update
+  const circ = 264;
+  const sasArc = (parseFloat(sasPossShare)/100)*circ;
+  const nykArc = circ - sasArc;
+  const sasOff = -66 + (circ - sasArc)/2;
+  document.getElementById('donutSAS').setAttribute('stroke-dasharray', `${sasArc} ${circ}`);
+  document.getElementById('donutSAS').setAttribute('stroke-dashoffset', '66');
+  document.getElementById('donutNYK').setAttribute('stroke-dasharray', `${nykArc} ${circ}`);
+  document.getElementById('donutNYK').setAttribute('stroke-dashoffset', -(sasArc - 66));
+
+  // formula text
+  const sReb = s.SAS.reb, nReb = s.NYK.reb, sTov = s.SAS.tov, nTov = s.NYK.tov;
+  document.getElementById('possCalcSAS').innerHTML = `Spurs: <span style="color:var(--green)">${sReb}</span>-<span style="color:var(--orange)">${sTov}</span>=<b>${sasPoss}</b>`;
+  document.getElementById('possCalcNYK').innerHTML = `Knicks: <span style="color:var(--green)">${nReb}</span>-<span style="color:var(--orange)">${nTov}</span>=<b>${nykPoss}</b>`;
+}
+
+function renderGameResults() {
+  const el = document.getElementById('gameResultsList');
+  let html = '';
+  for (let g = 1; g <= 7; g++) {
+    const gd = GAMES[g];
+    const isActive = currentGame == g;
+    const played = gd.winner !== null;
+    if (!played) {
+      if (currentGame !== 'all' && currentGame != g) continue;
+      html += `<div class="gr-row upcoming${isActive?' active-game':''}">
+        <span class="gr-num">Game ${g}</span>
+        <span class="gr-score" style="color:var(--muted)">${gd.date} @ ${gd.loc} <span class="upcoming-badge">Upcoming</span></span>
+        <span class="gr-w tbd">—</span>
+      </div>`;
+    } else {
+      if (currentGame !== 'all' && currentGame != g) continue;
+      const nyk = gd.score.NYK, sas = gd.score.SAS;
+      const nykWin = gd.winner === 'NYK';
+      const scoreStr = nykWin
+        ? `Knicks ${nyk} - ${sas} Spurs`
+        : `Spurs ${sas} - ${nyk} Knicks`;
+      html += `<div class="gr-row${isActive?' active-game':''}">
+        <span class="gr-num">Game ${g}</span>
+        <span class="gr-score">${scoreStr}</span>
+        <span class="gr-w ${nykWin?'win':'loss'}">${nykWin?'W':'L'}</span>
+      </div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+function renderTrend() {
+  const nykPts = [105,105,111,107,null,null,null];
+  const sasPts = [95,104,115,106,null,null,null];
+  const labels = ['G1','G2','G3','G4','G5','G6','G7'];
+  const maxPt = 130;
+  const nykEl = document.getElementById('trendNYK');
+  const sasEl = document.getElementById('trendSAS');
+  const lblEl = document.getElementById('trendLabels');
+  let nykH='', sasH='', lblH='';
+  for (let i=0; i<7; i++) {
+    const isActive = currentGame == (i+1);
+    const nv = nykPts[i], sv = sasPts[i];
+    const nykH2 = nv ? ((nv/maxPt)*100)+'%' : '4px';
+    const sasH2 = sv ? ((sv/maxPt)*100)+'%' : '4px';
+    const nykCol = nv ? (nv > sasPts[i] ? 'var(--orange)' : 'rgba(245,132,38,.35)') : 'rgba(255,255,255,.08)';
+    const sasCol = sv ? (sv > nykPts[i] ? 'var(--blue2)' : 'rgba(26,127,212,.35)') : 'rgba(255,255,255,.08)';
+    nykH += `<div class="trend-bar" style="height:${nykH2};background:${nykCol};border:${isActive?'1.5px solid var(--orange)':'none'}"></div>`;
+    sasH += `<div class="trend-bar" style="height:${sasH2};background:${sasCol};border:${isActive?'1.5px solid var(--blue2)':'none'}"></div>`;
+    lblH += `<div class="tl${isActive?' active-lbl':''}">${labels[i]}</div>`;
+  }
+  nykEl.innerHTML = nykH;
+  sasEl.innerHTML = sasH;
+  lblEl.innerHTML = lblH;
+}
+
+function renderPlayers() {
+  let data = PLAYERS_ALL.filter(p => {
+    if (playerFilter === 'NYK') return p.team === 'NYK';
+    if (playerFilter === 'SAS') return p.team === 'SAS';
+    if (playerFilter === 'G') return p.pos === 'G';
+    if (playerFilter === 'F') return p.pos === 'F';
+    if (playerFilter === 'C') return p.pos === 'C';
+    return true;
+  });
+  data.sort((a,b) => {
+    const ak = a[sortKey] ?? -999, bk = b[sortKey] ?? -999;
+    return sortDir * (ak > bk ? 1 : -1);
+  });
+  const body = document.getElementById('playerBody');
+  body.innerHTML = data.map(p => {
+    const tc = p.team === 'NYK' ? 'nyk' : 'sas';
+    const pmClass = p.pm > 0 ? 'pos' : p.pm < 0 ? 'neg' : 'nut';
+    const pmStr = p.pm > 0 ? '+'+p.pm : p.pm;
+    const fgCol = p.fg >= 50 ? 'var(--green)' : p.fg >= 40 ? 'var(--off)' : 'var(--red)';
+    // if single game, get game-specific pts
+    let displayPts = p.pts;
+    if (currentGame !== 'all' && PLAYER_GAME[currentGame]) {
+      const gp = [...(PLAYER_GAME[currentGame].NYK||[]),...(PLAYER_GAME[currentGame].SAS||[])];
+      const match = gp.find(x => x.n.includes(p.name.split(' ')[1]||p.name.split(' ')[0]));
+      if (match) displayPts = match.pts;
+    }
+    return `<tr>
+      <td><div class="pcell">
+        <div class="pava ${tc}"><svg viewBox="0 0 28 28" width="28" height="28">
+          <circle cx="14" cy="10" r="5.5" fill="${tc==='nyk'?'#f58426':'#c4ced4'}"/>
+          <ellipse cx="14" cy="21" rx="8" ry="6" fill="${tc==='nyk'?'#f58426':'#c4ced4'}"/>
+        </svg></div>
+        <span class="pname">${p.name}</span>
+      </div></td>
+      <td><div class="ticon ${tc}">${p.team}</div></td>
+      <td class="ptscell">${displayPts}</td>
+      <td>${p.reb}</td>
+      <td>${p.ast}</td>
+      <td>${p.usg}</td>
+      <td class="pmcell ${pmClass}">${pmStr}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAnalyst() {
+  const gk = currentGame === 'all' ? 'all' : parseInt(currentGame);
+  const findings = FINDINGS[gk] || FINDINGS.all;
+  const recs = RECS[gk] || RECS.all;
+  document.getElementById('findingsList').innerHTML = findings
+    .map(f => `<div class="finding-row"><div class="chk">✓</div><div>${f}</div></div>`).join('');
+  document.getElementById('recSection').innerHTML = `
+    <div class="rec-intro"><span style="font-size:20px;flex-shrink:0">📋</span><span>${recs.intro}</span></div>
+    <ol class="rec-list">${recs.items.map((r,i)=>`<li><span class="rec-num">${i+1}.</span><span>${r}</span></li>`).join('')}</ol>`;
+}
+
+function renderInsight() {
+  const gk = currentGame === 'all' ? 'all' : parseInt(currentGame);
+  document.getElementById('insightText').textContent = INSIGHTS[gk] || INSIGHTS.all;
+}
+
+function renderScoreBanner() {
+  const section = document.getElementById('scoreBannerSection');
+  const banner = document.getElementById('scoreBanner');
+  const qGrid = document.getElementById('quarterGrid');
+  if (currentGame === 'all') { section.style.display = 'none'; return; }
+  const gn = parseInt(currentGame);
+  const gd = GAMES[gn];
+  if (!gd.winner) {
+    section.style.display = 'block';
+    banner.innerHTML = `<div class="sb-game-label">Game ${gn} · ${gd.date} @ ${gd.loc}</div>
+      <div class="sb-score-row"><div class="sb-team"><span class="sb-tname" style="color:var(--orange)">Knicks</span><span class="sb-pts">TBD</span></div>
+      <span class="sb-vs">vs</span>
+      <div class="sb-team"><span class="sb-tname" style="color:var(--silver)">Spurs</span><span class="sb-pts">TBD</span></div></div>
+      <div><span class="sb-result-badge tbd">Upcoming ⚡</span></div>`;
+    qGrid.innerHTML = '';
+    return;
+  }
+  section.style.display = 'block';
+  const nyk=gd.score.NYK, sas=gd.score.SAS, nykWin=gd.winner==='NYK';
+  banner.innerHTML = `<div class="sb-game-label">Game ${gn} · ${gd.date} @ ${gd.loc}</div>
+    <div class="sb-score-row">
+      <div class="sb-team"><span class="sb-tname" style="color:var(--orange)">Knicks</span><span class="sb-pts" style="color:${nykWin?'var(--orange)':'var(--muted)'}">${nyk}</span></div>
+      <span class="sb-vs">vs</span>
+      <div class="sb-team"><span class="sb-tname" style="color:var(--silver)">Spurs</span><span class="sb-pts" style="color:${!nykWin?'var(--blue2)':'var(--muted)'}">${sas}</span></div>
+    </div>
+    <div><span class="sb-result-badge ${nykWin?'win':'loss'}">${gd.result}</span></div>`;
+
+  // Quarter grid
+  const q = gd.quarters;
+  const totNYK = Object.values(q).reduce((a,v)=>a+v.NYK,0);
+  const totSAS = Object.values(q).reduce((a,v)=>a+v.SAS,0);
+  qGrid.innerHTML = ['Q1','Q2','Q3','Q4'].map(qt=>{
+    const nykHi = q[qt].NYK > q[qt].SAS;
+    return `<div class="qcell">
+      <div class="qcell-label">${qt}</div>
+      <div class="qcell-nyk ${nykHi?'hi':''}">${q[qt].NYK}</div>
+      <div class="q-divider"></div>
+      <div class="qcell-sas ${!nykHi?'hi':''}">${q[qt].SAS}</div>
+    </div>`;
+  }).join('') + `<div class="qcell" style="border:1px solid var(--border)">
+    <div class="qcell-label">FINAL</div>
+    <div class="qcell-nyk ${nykWin?'hi':''}" style="font-size:16px">${nyk}</div>
+    <div class="q-divider"></div>
+    <div class="qcell-sas ${!nykWin?'hi':''}" style="font-size:16px">${sas}</div>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────
+// EVENT HANDLERS
+// ─────────────────────────────────────────────
+function filterGame(g, btn) {
+  currentGame = g;
+  document.querySelectorAll('.fb-chips .chip').forEach(c=>c.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  // sync param panel
+  document.querySelectorAll('#gameParamOpts .param-opt').forEach(o=>{
+    o.classList.toggle('sel', o.dataset.game === g);
+  });
+  renderAll();
+}
+
+function filterPlayers(f, btn) {
+  playerFilter = f;
+  document.querySelectorAll('.pf-chip').forEach(c=>c.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  renderPlayers();
+}
+
+function sortPlayers(key) {
+  if (sortKey === key) sortDir *= -1;
+  else { sortKey = key; sortDir = -1; }
+  document.querySelectorAll('.pltbl th').forEach(th=>{
+    th.className = '';
+    if (th.getAttribute('onclick') === `sortPlayers('${key}')`) th.className = sortDir===-1?'sort-desc':'sort-asc';
+  });
+  renderPlayers();
+}
+
+function openParams() {
+  document.getElementById('paramPanel').classList.add('open');
+}
+function closeParams() {
+  document.getElementById('paramPanel').classList.remove('open');
+}
+
+function paramGame(btn) {
+  const g = btn.dataset.game;
+  document.querySelectorAll('#gameParamOpts .param-opt').forEach(o=>o.classList.remove('sel'));
+  btn.classList.add('sel');
+  // also update chips
+  document.querySelectorAll('.fb-chips .chip').forEach(c=>{
+    c.classList.toggle('on', c.dataset.g === g);
+  });
+  currentGame = g;
+  renderAll();
+}
+
+function paramView(btn) {
+  document.querySelectorAll('[data-view]').forEach(o=>o.classList.remove('sel-blue'));
+  btn.classList.add('sel-blue');
+  viewPerspective = btn.dataset.view;
+  renderPlayers();
+}
+
+function paramStat(btn) {
+  document.querySelectorAll('[data-stat]').forEach(o=>o.classList.remove('sel-blue'));
+  btn.classList.add('sel-blue');
+  statFocus = btn.dataset.stat;
+  renderAll();
+}
+
+function askQuestion(q) {
+  const answers = {
+    turnovers: `🔥 TURNOVER BATTLE:\n\nGame 1: NYK 9 TOV → Won +10\nGame 2: Both 15-16 TOV → NYK won +1\nGame 3: SAS 8 TOV → SAS won +4\nGame 4: NYK 15 TOV → NYK won +1\n\n📊 Series: SAS 49 TOV vs NYK 52 TOV\n\nConclusion: Whoever commits <10 turnovers wins the game. That's the series formula.`,
+    rebounds: `💪 REBOUNDING vs WINS:\n\nSeries total rebounds: SAS 211 vs NYK 223\nSpurs lead offensive boards (37 vs 40)\n\nBut rebounding alone doesn't guarantee wins:\n• G1: Tied 60-60 reb → NYK won\n• G3: SAS 48 vs NYK 56 reb → SAS still won\n\nConclusion: Rebounding HELPS but converting those into 2nd-chance points (NYK 72 vs SAS 41) is the real difference.`,
+    clutch: `⏱ CLOSE GAME RECORD:\n\nNYK in 1-point games: 2-0 (G2, G4)\nNYK in games decided by ≤10: 3-0\nSAS won by 4 in their only win (G3)\n\nJalen Brunson: 36 pts in G4 one-point win\nOG Anunoby: 33 pts in that same game\n\nConclusion: Knicks' clutch execution under Brunson is the decisive series edge.`,
+    mvp: `⭐ SERIES MVP CANDIDATES:\n\nJalen Brunson (NYK): 29.5 ppg, +23 PM\n→ The Knicks' heartbeat and closer\n\nOG Anunoby (NYK): 23.8 ppg, 57.4% FG\n→ Elite efficiency + defense\n\nVictor Wembanyama (SAS): 27.8 ppg, 13 blk\n→ Best individual stats but -12 PM\n\nVerdict: Brunson leads in impact (PM, clutch); Wembanyama leads in raw stats. Brunson is the series MVP if NYK wins.`,
+    prediction: `🔮 SERIES PREDICTION:\n\nKnicks lead 3-1 (Need 1 more win)\nSpurs need 3 straight wins\n\nKnicks win probability: ~75%\nSpurs comeback probability: ~25%\n\nFactors favoring NYK:\n• 3-0 in close games\n• Better late-game execution\n• Brunson + Anunoby closing combo\n\nFactors favoring SAS:\n• Home-court (G5)\n• Wembanyama is the best player\n• History of SAS resilience\n\nPrediction: Knicks in 5 or 6 games`,
+  };
+  alert(answers[q] || 'Answer not found.');
+  closeParams();
+}
+
+// Close param panel on backdrop tap
+document.getElementById('paramPanel').addEventListener('click', function(e) {
+  if (e.target === this) closeParams();
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>
